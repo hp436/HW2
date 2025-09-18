@@ -1,30 +1,18 @@
-""" tests/test_calculator.py """
 import sys
 from io import StringIO
 from app.calculator import calculator
 
 
-# Helper function to capture print statements
 def run_calculator_with_input(monkeypatch, inputs):
-    """
-    Simulates user input and captures output from the calculator REPL.
-    
-    :param monkeypatch: pytest fixture to simulate user input
-    :param inputs: list of inputs to simulate
-    :return: captured output as a string
-    """
     input_iterator = iter(inputs)
     monkeypatch.setattr('builtins.input', lambda _: next(input_iterator))
 
-    # Capture the output of the calculator
     captured_output = StringIO()
     sys.stdout = captured_output
     calculator()
-    sys.stdout = sys.__stdout__  # Reset stdout
+    sys.stdout = sys.__stdout__  
     return captured_output.getvalue()
 
-
-# Positive Tests
 def test_addition(monkeypatch):
     """Test addition operation in REPL."""
     inputs = ["add 2 3", "exit"]
@@ -52,8 +40,6 @@ def test_division(monkeypatch):
     output = run_calculator_with_input(monkeypatch, inputs)
     assert "Result: 5.0" in output
 
-
-# Negative Tests
 def test_invalid_operation(monkeypatch):
     """Test invalid operation in REPL."""
     inputs = ["modulus 5 3", "exit"]
